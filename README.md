@@ -86,7 +86,10 @@ This is the place for you to write reflections:
 
 #### Reflection Subscriber-1
 In this tutorial, we used RwLock<> to synchronise the use of Vec of Notifications. Explain why it is necessary for this case, and explain why we do not use Mutex<> instead?
+RwLock merupakan singkatan atas Read-Write Lock. Dia memastikan multiple threads untuk bisa membaca data dalam satu waktu tetapi hanya satu thread yang bisa melakukan write pada sekali waktu. Ini sangat cocok ketika kita punya kasus yang membutuhkan pembacaan data yang sering dan penulisan yang pada sekali-sekali saja, misalnya pada notifikasi. Program notification hanya menambahkan notifikasi yang baru sekali-sekali, tetapi sangat sering digunakan untuk proses read. RwLock akan mempercepat prosesnya. Mutex tidak dipilih karena mutex hanya memungkinkan satu data diakses dalam satu waktu tak peduli reading maupun writing (sesuai dengan namanya, mutual exclusion). Ini akan memperlama proses karena kita harus tetap menunggu meski padahal tidak ada proses writing yang sedang terjadi.
+
 In this tutorial, we used lazy_static external library to define Vec and DashMap as a “static” variable. Compared to Java where we can mutate the content of a static variable via a static function, why did not Rust allow us to do so?
+Pada Rust kita tidak bisa langsung mengubah static variables kapanpun juga karena Rust sangat concern dengan pencegahan data races. Data race ini merupakan situasi ketika threads saling mengintervensi dan menyebabkan error atau hasil yang tak dapat diprediksi. Rust menggunakan aturan yang ketat untuk memastikan programnya aman dan data tidak corrupt ketika ada modifikasi yang melibatkan konkurensi. Lebih jauh, lazy_static diterapkan karena dia memungkinkan kita mendefinisikan variabel yang akan dibuat saat pertama kali dia diakses dan akan terus sama (immutable) setelahnya. Ini memungkinkan program kita lebih thread-safe.
 
 #### Reflection Subscriber-2
 Have you explored things outside of the steps in the tutorial, for example: src/lib.rs? If not, explain why you did not do so. If yes, explain things that you have learned from those other parts of code.
